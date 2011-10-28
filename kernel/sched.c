@@ -3057,7 +3057,7 @@ static void __sched_fork(struct task_struct *p)
 /*
  * fork()/clone()-time setup:
  */
-void sched_fork(struct task_struct *p)
+int sched_fork(struct task_struct *p)
 {
 	unsigned long flags;
 	int cpu = get_cpu();
@@ -3096,8 +3096,10 @@ void sched_fork(struct task_struct *p)
 		p->sched_reset_on_fork = 0;
 	}
 
-	if (dl_prio(p->prio))
-		p->sched_class = &dl_sched_class;
+	if (dl_prio(p->prio)) {
+		put_cpu();
+		return -EAGAIN;
+	}
 	else if (rt_prio(p->prio))
 		p->sched_class = &rt_sched_class;
 	else
@@ -3134,6 +3136,7 @@ void sched_fork(struct task_struct *p)
 #endif
 
 	put_cpu();
+	return 0;
 }
 
 /*
