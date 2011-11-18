@@ -235,9 +235,6 @@ void print_rt_rq(struct seq_file *m, int cpu, struct rt_rq *rt_rq)
 	P(rt_throttled);
 	PN(rt_time);
 	PN(rt_runtime);
-#ifdef CONFIG_SMP
-	P(rt_nr_migratory);
-#endif
 
 #undef PN
 #undef P
@@ -280,6 +277,9 @@ static void print_cpu(struct seq_file *m, int cpu)
 	P(cpu_load[2]);
 	P(cpu_load[3]);
 	P(cpu_load[4]);
+#ifdef CONFIG_SMP
+	P(rt.rt_nr_migratory);
+#endif
 #undef P
 #undef PN
 
