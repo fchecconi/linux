@@ -20,6 +20,11 @@ static inline struct rt_rq *rt_rq_of_se(struct sched_rt_entity *rt_se)
 	return rt_se->rt_rq;
 }
 
+static u64 from_ratio(unsigned long ratio, u64 period)
+{
+	return (ratio * period) >> 20;
+}
+
 #else /* CONFIG_RT_GROUP_SCHED */
 
 static inline struct task_struct *rt_task_of(struct sched_rt_entity *rt_se)
@@ -545,11 +550,6 @@ static inline void double_spin_unlock(raw_spinlock_t *lock1,
 {
 	raw_spin_unlock(lock1);
 	raw_spin_unlock(lock2);
-}
-
-static u64 from_ratio(unsigned long ratio, u64 period)
-{
-	return (ratio * period) >> 20;
 }
 
 /*
